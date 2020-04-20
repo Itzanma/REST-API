@@ -9,6 +9,7 @@ class Article(models.Model):
     slug = models.SlugField(db_index=True, unique=True, max_length=255)
     title = models.CharField(max_length=255)
     subtitle = models.CharField(blank=True, max_length=400)
+    # El campo RichTextUploading lo heredo de CKEDITOR
     body = RichTextUploadingField()
     image = models.ImageField(upload_to='featured_image', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
