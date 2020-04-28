@@ -1,7 +1,12 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
 
+from articles.models import Article
+from articles.serializers import ArticleSerializer
+from votes.models import Vote
 from .permissions import IsOwnerOrReadOnly
 from .serializers import UserSerializer, CreateUserSerializer
 from .models import User
@@ -38,3 +43,15 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return CreateUserSerializer
         return UserSerializer
+
+    @action(detail=True, methods=['GET'])
+    def liked_post(self, request, pk=None):
+        user = self.get_object()
+        articles = Article.objects.filter(likes__user=user.id, likes__value=True)
+        print(articles)
+        serialized = ArticleSerializer(articles, many=True)
+        if not articles:
+            return Response(status=status.HTTP_404_NOT_FOUND, data={
+                                'message': 'Este usuario no tiene articulos favoritos'}
+                            )
+        return Response(status=status.HTTP_200_OK, data=serialized.data)
