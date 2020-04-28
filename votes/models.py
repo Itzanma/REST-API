@@ -10,7 +10,8 @@ class Vote(models.Model):
                              on_delete=models.CASCADE)
 
     article = models.ForeignKey(Article,
-                                on_delete=models.CASCADE)
+                                on_delete=models.CASCADE,
+                                related_name='likes')
 
     voted_on = models.DateTimeField(
         auto_now=True

@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from articles.models import Article, Comment
 from accounts.models import User
+from votes.models import Vote
+from votes.serializers import VoteSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -31,7 +33,11 @@ class CreateArticleSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     comments = CommentSerializer(read_only=True, many=True)
+    likes = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Article
         fields = "__all__"
+
+    def get_likes(self, obj):
+        return obj.likes.filter(value=True).count()
