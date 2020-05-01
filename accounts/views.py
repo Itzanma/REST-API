@@ -48,7 +48,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def liked_post(self, request, pk=None):
         user = self.get_object()
         articles = Article.objects.filter(likes__user=user.id, likes__value=True)
-        print(articles)
         serialized = ArticleSerializer(articles, many=True)
         if not articles:
             return Response(status=status.HTTP_404_NOT_FOUND, data={

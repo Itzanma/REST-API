@@ -42,3 +42,4 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return CreateArticleSerializer
         return ArticleSerializer
+
