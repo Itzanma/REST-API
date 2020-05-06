@@ -9,10 +9,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import environ
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, True),
-)
 # reading .env file
 environ.Env.read_env()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY =  '7o+!0@tq4%9ch+f)vw4gx^bp3fz05qz+t!1bc=&bf!c%^w!a5e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -70,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'itzamna.urls'
@@ -95,10 +92,14 @@ WSGI_APPLICATION = 'itzamna.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+import dj_database_url
+from decouple import config
+
 DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            dj_database_url.config(
+                default=config('DATABASE_URL')
+            )
         }
     }
 
@@ -137,8 +138,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS =(
+    os.path.join(BASE_DIR, 'static')
+)
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -186,18 +192,18 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-SENDGRID_API_KEY = 'yourcredentials'
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
 
-EMAIL_HOST = 'yourcredentials'
-EMAIL_HOST_USER = 'yourcredentials'
-EMAEsteIL_HOST_PASSWORD = 'yourcredentials'
-EMAIL_PORT ='yourcredentials'
-EMAIL_USE_TLS = 'yourcredentials'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT =config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 
-AWS_ACCESS_KEY_ID='AKIASI2EMK63YI7SL43H'
-AWS_SECRET_ACCESS_KEY='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'
-AWS_STORAGE_BUCKET_NAME='itzamnarestapi'
+AWS_ACCESS_KEY_ID=config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=config('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_FILE_OVERWRITE=False
 AWS_DEFAULT_ACL='public-read'
 DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
@@ -205,6 +211,6 @@ S3_USE_SIGV4=True
 AWS_QUERYSTRING_AUTH=False
 
 ALGOLIA = {
-    'APPLICATION_ID': 'E4ONBDV0EP',
-    'API_KEY': '05538cce45368677e9efad85a28ba07b'
+    'APPLICATION_ID': config('ALGOLIA_APPLICATION_ID'),
+    'API_KEY': config('ALGOLIA_API_KEY')
 }
