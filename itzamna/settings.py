@@ -1,10 +1,7 @@
-
+from decouple import config
 import os
 import environ
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, True),
-)
+
 # reading .env file
 environ.Env.read_env()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -19,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY =  '7o+!0@tq4%9ch+f)vw4gx^bp3fz05qz+t!1bc=&bf!c%^w!a5e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -176,20 +173,25 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-SENDGRID_API_KEY = 'yourcredentials'
+SENDGRID_API_KEY = config('SENDGRID_API_KEY', default='')
 
-EMAIL_HOST = 'yourcredentials'
-EMAIL_HOST_USER = 'yourcredentials'
-EMAIL_HOST_PASSWORD = 'yourcredentials'
-EMAIL_PORT ='yourcredentials'
-EMAIL_USE_TLS = 'yourcredentials'
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWO')
+EMAIL_PORT = 587
+EMAIL_USE_TLS =True
 
 
-AWS_ACCESS_KEY_ID = 'yourcredentials'
-AWS_SECRET_ACCESS_KEY ='yourcredentials'
-AWS_STORAGE_BUCKET_NAME = 'yourcredentials'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY =config('AWS_SECRET_ACCESS_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='')
 AWS_S3_FILE_OVERWRITE=False
 AWS_DEFAULT_ACL='public-read'
 DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
 S3_USE_SIGV4=True
 AWS_QUERYSTRING_AUTH=False
+
+ALGOLIA = {
+    'APPLICATION_ID': config('ALGOLIA_APPLICATION_ID', default=''),
+    'API_KEY': config('ALGOLIA_API_KEY', default='')
+}
