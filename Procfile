@@ -1,1 +1,1 @@
-web: gunicorn REST-API.itzamna.wsig --log-file -
+web: gunicorn itzamna.wsig --log-file -
