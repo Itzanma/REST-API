@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'articles.apps.ArticlesConfig',
     'votes.apps.VotesConfig',
+    'events.apps.EventsConfig',
     # Thirds apps
     'django_extensions',
     'rest_framework',
