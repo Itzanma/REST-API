@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'articles.apps.ArticlesConfig',
     'votes.apps.VotesConfig',
+    'events.apps.EventsConfig',
     # Thirds apps
     'django_extensions',
     'rest_framework',
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'storages',
     'ckeditor',
     'ckeditor_uploader',
+    'algoliasearch_django'
 
 ]
 
@@ -94,15 +96,12 @@ WSGI_APPLICATION = 'itzamna.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("NAME"),
-        'USER': os.getenv("USER"),
-        'PASSWORD': os.getenv("PASSWORD"),
-        'HOST': 'localhost',
-        'PORT': '',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -191,16 +190,21 @@ SENDGRID_API_KEY = 'yourcredentials'
 
 EMAIL_HOST = 'yourcredentials'
 EMAIL_HOST_USER = 'yourcredentials'
-EMAIL_HOST_PASSWORD = 'yourcredentials'
+EMAEsteIL_HOST_PASSWORD = 'yourcredentials'
 EMAIL_PORT ='yourcredentials'
 EMAIL_USE_TLS = 'yourcredentials'
 
 
-AWS_ACCESS_KEY_ID = 'yourcredentials'
-AWS_SECRET_ACCESS_KEY ='yourcredentials'
-AWS_STORAGE_BUCKET_NAME = 'yourcredentials'
+AWS_ACCESS_KEY_ID='AKIASI2EMK63YI7SL43H'
+AWS_SECRET_ACCESS_KEY='cExD9j/JCNIVMtdW4RLn++gxw52YFgj3rfXRlYWL'
+AWS_STORAGE_BUCKET_NAME='itzamnarestapi'
 AWS_S3_FILE_OVERWRITE=False
 AWS_DEFAULT_ACL='public-read'
 DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
 S3_USE_SIGV4=True
 AWS_QUERYSTRING_AUTH=False
+
+ALGOLIA = {
+    'APPLICATION_ID': 'E4ONBDV0EP',
+    'API_KEY': '05538cce45368677e9efad85a28ba07b'
+}

@@ -4,7 +4,17 @@ from accounts.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 
 
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(PublishedManager, self).get_queryset().filter(status='published')
+
+
 class Article(models.Model):
+    STATUS_CHOICES = (
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    )
+
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(db_index=True, unique=True, max_length=255)
     title = models.CharField(max_length=255)
@@ -12,8 +22,15 @@ class Article(models.Model):
     # El campo RichTextUploading lo heredo de CKEDITOR
     body = RichTextUploadingField()
     image = models.ImageField(upload_to='featured_image', blank=True)
+    status = models.CharField(max_length=10,
+                              choices=STATUS_CHOICES,
+                              default='draft')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()  # The default manager.
+    published = PublishedManager()  # Our custom manager.
 
     class Meta:
         ordering = ('-created_at', 'title')

@@ -27,17 +27,29 @@ class UserSerializer(serializers.ModelSerializer):
 class CreateArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ('id', 'title', 'body', 'author', 'image', 'comments', 'subtitle')
+        fields = ('id', 'title', 'body', 'author', 'image', 'comments', 'subtitle', 'status')
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = serializers.CharField(
+        source='author.username',
+        read_only=True
+    )
     comments = CommentSerializer(read_only=True, many=True)
-    likes_count = serializers.SerializerMethodField(read_only=True)
+    likes = serializers.IntegerField(
+        source='likes_count',
+        read_only=True
+    )
 
     class Meta:
         model = Article
         fields = "__all__"
 
-    def get_likes_count(self, obj):
-        return obj.likes.filter(value=True).count()
+
+class ArticleOverviewSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    print(author)
+
+    class Meta:
+        model = Article
+        fields = ('id', 'author', 'title', 'slug', 'image')

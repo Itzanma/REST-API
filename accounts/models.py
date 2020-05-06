@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+# Manager para los usuarios activos
 
 class User(AbstractUser):
     # Lista de cohortes de Academlo
@@ -9,6 +10,7 @@ class User(AbstractUser):
         ('J2019', 'Julio 2019'),
         ('E2020', 'Enero 2020'),
         ('M2020', 'Mayo 2020'),
+        ('A2020', 'Agosto 2020'),
     ]
 
     GENDER = [
@@ -29,3 +31,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Follow(models.Model):
+    user_from = models.ForeignKey(User,
+                                  related_name='rel_from_set',
+                                  on_delete=models.CASCADE)
+
+    user_to = models.ForeignKey(User,
+                                related_name='rel_to_set',
+                                on_delete=models.CASCADE)
+
+    created = models.DateTimeField(auto_now_add=True,
+                                   db_index=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.user_from} follows {self.user_to}'
+
