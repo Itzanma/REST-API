@@ -29,6 +29,6 @@ pytest-django==3.9.0
 requests==2.23.0
 s3transfer==0.3.3
 six==1.14.0
-
+python-decouple==3.3
 
 
